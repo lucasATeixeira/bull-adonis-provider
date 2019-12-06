@@ -1,0 +1,22 @@
+'use strict'
+
+class {{name}} {
+
+  // Bulls options https://optimalbits.github.io/bull/
+  static get options () {
+    return {}
+  }
+
+  // This is required. This is a unique key used to identify this job.
+  static get key () {
+    return '{{name}}-job'
+  }
+
+  // This is where the work is done.
+  async handle ({ data }) {
+    console.log('{{name}}-job started')
+  }
+}
+
+module.exports = {{name}}
+
