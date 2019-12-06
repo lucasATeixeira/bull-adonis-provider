@@ -6,9 +6,14 @@ class BullProvider extends ServiceProvider {
   register() {
     this.app.singleton("Bull/Queue", () => {
       const Queue = require("bull");
+      const fs = require("fs");
 
       const Config = this.app.use("Adonis/Src/Config");
       const Helpers = this.app.use("Adonis/Src/Helpers");
+
+      if (!fs.existsSync(Helpers.appRoot("app/Jobs"))) {
+        return;
+      }
 
       const jobs = require(Helpers.appRoot("app/Jobs"));
 

@@ -2,6 +2,8 @@
 
 const { Command } = require("@adonisjs/ace");
 
+const fs = require("fs");
+
 const { join, basename } = require("path");
 
 class BullMakeJob extends Command {
@@ -19,12 +21,27 @@ class BullMakeJob extends Command {
         return p1.toUpperCase() + p2;
       });
 
-      const templatePath = join(__dirname, "../../templates/Job.mustache");
+      const templatePath = join(__dirname, "../../templates/Jobs/Job.mustache");
       const templateContent = await this.readFile(templatePath, "utf-8");
 
       const filePath = join("app/Jobs", name) + ".js";
 
       await this.generateFile(filePath, templateContent, { name });
+
+      const indexFilePath = join("app/Jobs/index.js");
+
+      if (!fs.existsSync(indexFilePath)) {
+        const indexTemplatePath = join(
+          __dirname,
+          "../../templates/Jobs/JobIndex.mustache"
+        );
+        const indexTemplateContent = await this.readFile(
+          indexTemplatePath,
+          "utf-8"
+        );
+
+        await this.generateFile("app/Jobs/index.js", indexTemplateContent);
+      }
 
       const namespace = this.getNamespace(filePath);
       console.log(
@@ -45,7 +62,7 @@ class BullMakeJob extends Command {
    * Print instructions to the console
    */
   printInstructions(namespace) {
-    console.log("PUT INSTRUCTIONS HERE");
+    console.log("Job created at 'app/Jobs'");
   }
 }
 

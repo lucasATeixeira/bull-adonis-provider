@@ -2,7 +2,11 @@
 
 const { Command } = require("@adonisjs/ace");
 
+const fs = require("fs");
+
 const Bull = use("Bull");
+
+const Helpers = use("Helpers");
 
 class BullListen extends Command {
   static get signature() {
@@ -14,8 +18,20 @@ class BullListen extends Command {
   }
 
   async handle(args, options) {
-    Bull.process();
-    this.info("Processing Jobs");
+    if (!fs.existsSync(Helpers.appRoot("app/Jobs"))) {
+      this.error(
+        `
+
+There is no Jobs to be processed,to create a Jop run command:
+
+'adonis bull:make-job [name]'
+
+        `
+      );
+    } else {
+      Bull.process();
+      this.info("Processing Jobs");
+    }
   }
 }
 
